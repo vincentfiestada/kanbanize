@@ -33,7 +33,7 @@ public class Task {
         this.status = status;
     }
 
-    public Task(long id, String name, User user)
+    public Task(int id, String name, User user)
     {
         this.id = id;
         this.name = name;
@@ -41,7 +41,7 @@ public class Task {
         this.status = Status.REQUESTED;
     }
 
-    public Task(long id, String name, User user, Status status)
+    public Task(int id, String name, User user, Status status)
     {
         this.id = id;
         this.name = name;
@@ -49,8 +49,8 @@ public class Task {
         this.status = status;
     }
 
-    private static long nextId = 0;
-    private long id;
+    private static int nextId = 0;
+    private int id;
     private String name;
     private User assignedUser;
     private Status status;
@@ -60,7 +60,7 @@ public class Task {
      * Getters and Setters
      */
 
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -91,7 +91,25 @@ public class Task {
         this.status = status;
     }
 
+    public void setStatus(String status) {
+        switch(status) {
+            case "REQUESTED":
+                this.status = Status.REQUESTED;
+            break;
+            case "DEVELOPMENT":
+                this.status = Status.DEVELOPMENT;
+            break;
+            case "TESTING":
+                this.status = Status.TESTING;
+            break;
+            case "DONE":
+                this.status = Status.DONE;
+            break;
+        }
+    }
+
     public boolean equals(Task t) {
         return (id == t.getId());
     }
+
 }

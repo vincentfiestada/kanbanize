@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
         col2.getListView().setOnItemLongClickListener(new LongItemClick());
         // Column 3 (Testing)
         TaskListFragment col3 = (TaskListFragment) fm.findFragmentById(R.id.column3);
-        adapters.add(TEST_INDEX, new TaskListAdapter(this, Tasks.getDevelopment(), Task.Status.TESTING));
+        adapters.add(TEST_INDEX, new TaskListAdapter(this, Tasks.getTesting(), Task.Status.TESTING));
         col3.setListAdapter(adapters.get(TEST_INDEX));
         col3.getListView().setOnItemLongClickListener(new LongItemClick());
         // Column 4 (Done)
         TaskListFragment col4 = (TaskListFragment) fm.findFragmentById(R.id.column4);
-        adapters.add(DONE_INDEX, new TaskListAdapter(this, Tasks.getDevelopment(), Task.Status.DONE));
+        adapters.add(DONE_INDEX, new TaskListAdapter(this, Tasks.getDone(), Task.Status.DONE));
         col4.setListAdapter(adapters.get(DONE_INDEX));
         col4.getListView().setOnItemLongClickListener(new LongItemClick());
 
@@ -53,9 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<TaskListAdapter> adapters;
 
-//    public static getAdapterByStatus(Task.Status status) {
-//        switch(status) {
-//            case
-//        }
-//    }
+    public static TaskListAdapter getAdapterByStatus(String status) {
+        if (adapters != null) {
+            switch(status) {
+                case "DEVELOPMENT":
+                    return adapters.get(DEV_INDEX);
+                case "TESTING":
+                    return adapters.get(TEST_INDEX);
+                case "DONE":
+                    return adapters.get(DONE_INDEX);
+                case "REQUESTED":
+                    return adapters.get(REQ_INDEX);
+                default:
+                    return null;
+            }
+
+        }
+        else {
+            return null;
+        }
+    }
 }

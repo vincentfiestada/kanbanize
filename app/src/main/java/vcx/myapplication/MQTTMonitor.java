@@ -44,15 +44,24 @@ public class MQTTMonitor implements MqttCallback {
             if (payload.getString("action").compareTo("MOVE") == 0) {
                 // Move task
                 Log.d("go", "Moving");
-                // Notify user
-                Notify.notif(this.context, "Message", payload.toString());
-//                JSONArray params = payload.getJSONArray("params");
-//                Task t = Tasks.getListByStatus(params.getString(0)).remove(payload.getInt("id"));
-//                Tasks.getListByStatus(params.getString(1)).add(t);
-//
-//                if (MainActivity.adapters != null) {
-//                    MainActivity.adapters.get(MainActivity.REQ_INDEX)
-//                }
+                JSONArray params = payload.getJSONArray("params");
+
+                TaskListAdapter src = MainActivity.getAdapterByStatus(params.getString(0));
+                TaskListAdapter dest = MainActivity.getAdapterByStatus(params.getString(1));
+
+                if (src != null && dest != null) {
+                    // Remove Task from source and add to destination
+                    Task t = src.removeById(payload.getInt("id"));
+                    if (t != null) {
+                        // Make sure data binding is updated
+                        src.notifyDataSetChanged();
+                        t.setStatus(params.getString(1));
+                        // Notify user
+                        Notify.notif(this.context, "Message", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
+                        dest.getList().add(t);
+                        dest.notifyDataSetChanged();
+                    }
+                }
             }
         }
     }

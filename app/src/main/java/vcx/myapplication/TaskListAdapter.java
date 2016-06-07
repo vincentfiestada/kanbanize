@@ -68,6 +68,15 @@ public class TaskListAdapter extends BaseAdapter {
         return v;
     }
 
+    public Task removeById(int id) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getId() == id) {
+                return tasks.remove(i);
+            }
+        }
+        return null;
+    }
+
     public List<Task> getList() {
         return tasks;
     }

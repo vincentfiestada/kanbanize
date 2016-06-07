@@ -5,8 +5,7 @@
     <string name="column3_label">Testing</string>
     <string name="column4_label">Done</string>
 
-    <string name="test_button_label">Test</string>
-    <string name="move_button_label">Move to Development</string>
+    <string name="notif_moved_text">The task "%1$s" has been moved to %2$s</string>
 
     <string name="broker_uri">tcp://m2m.eclipse.org:1883</string>
     <string name="mqtt_topic">vcx.kanban</string>
