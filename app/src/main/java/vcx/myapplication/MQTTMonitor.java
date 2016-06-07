@@ -44,11 +44,11 @@ public class MQTTMonitor implements MqttCallback {
             if (payload.getString("action").compareTo("MOVE") == 0) {
                 // Move task
                 Log.d("go", "Moving");
+                // Notify user
+                Notify.notif(this.context, "Message", payload.toString());
                 JSONArray params = payload.getJSONArray("params");
                 Task t = Tasks.getListByStatus(params.getString(0)).remove(payload.getInt("id"));
                 Tasks.getListByStatus(params.getString(1)).add(t);
-                // Notify user
-                Notify.notif(this.context, "Message", payload.toString());
             }
         }
     }
