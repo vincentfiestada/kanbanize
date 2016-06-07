@@ -1,14 +1,7 @@
 package vcx.myapplication;
-
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-
-import android.util.Log;
-
-import org.eclipse.paho.android.service.*;
-
-import org.eclipse.paho.client.mqttv3.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,39 +10,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        // Start the MqttService
-//        this.startService(new Intent(getBaseContext(), MqttService.class));
-    }
+        // Initialize Tasks
+        new Tasks();
 
-    private MqttAndroidClient client;
+        // Initialize MQTT Client
+        new MQTTClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "vcx");
+
+        /* --------------------------------------------
+         * Get List Fragments and add tasks to adapters
+         */
+        FragmentManager fm = getFragmentManager();
+        // Column 1 (Requested)
+        TaskListFragment col1 = (TaskListFragment) fm.findFragmentById(R.id.column1);
+        col1.setListAdapter(new TaskListAdapter(this, Tasks.getRequested(), Task.Status.REQUESTED));
+        col1.getListView().setOnItemLongClickListener(new LongItemClick());
+        // Column 2 (Development)
+        TaskListFragment col2 = (TaskListFragment) fm.findFragmentById(R.id.column2);
+        col2.setListAdapter(new TaskListAdapter(this, Tasks.getDevelopment(), Task.Status.DEVELOPMENT));
+        col2.getListView().setOnItemLongClickListener(new LongItemClick());
+        // Column 3 (Testing)
+        TaskListFragment col3 = (TaskListFragment) fm.findFragmentById(R.id.column3);
+        col3.setListAdapter(new TaskListAdapter(this, Tasks.getTesting(), Task.Status.TESTING));
+        col3.getListView().setOnItemLongClickListener(new LongItemClick());
+        // Column 4 (Done)
+        TaskListFragment col4 = (TaskListFragment) fm.findFragmentById(R.id.column4);
+        col4.setListAdapter(new TaskListAdapter(this, Tasks.getDone(), Task.Status.DONE));
+        col4.getListView().setOnItemLongClickListener(new LongItemClick());
+    }
 
     // TODO: Handle onDragEvent
-    // TODO: Create classes for Task, user
-    // TODO: import MQTT service
-
-    public void notify(View v)
-    {
-        // Create new MQTT client
-        Log.d("click", "Hi");
-
-        if (this.client == null)
-        {
-            // Create MQTT Client
-            this.client = new MqttAndroidClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "test1");
-            try
-            {
-                client.connect(new MqttConnectOptions(),
-                        new Reactor(getBaseContext(), Reactor.Action.CONNECT));
-            }
-            catch(Exception e)
-            {
-                Log.d("Err", e.getMessage());
-            }
-        }
-
-        if (client.isConnected())
-        {
-            Log.d("Hello", "hi");
-        }
-    }
 }

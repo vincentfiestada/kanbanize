@@ -19,7 +19,7 @@
         <service android:name="org.eclipse.paho.android.service.MqttService" >
         </service>
 
-        <activity android:name=".MainActivity">
+        <activity android:name="vcx.myapplication.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
