@@ -2,6 +2,8 @@ package vcx.myapplication;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import android.util.Log;
 import android.content.Context;
 
@@ -13,7 +15,6 @@ public class Reactor implements IMqttActionListener {
     // Types of actions this listener can handle
     enum Action {
         CONNECT,
-        DISCONNECT,
         SUBSCRIBE,
         PUBLISH
     }
@@ -27,10 +28,25 @@ public class Reactor implements IMqttActionListener {
     {
         this.action = action;
         this.context = context;
+        this.subbed = false;
+    }
+
+    /**
+     * Constructor
+     * @param context context in which the MQTT action was done
+     * @param action the type of action this listener is expected to handle
+     * @param subbed If true, a subscribe message will not be sent after connect
+     */
+    public Reactor(Context context, Action action, boolean subbed)
+    {
+        this.action = action;
+        this.context = context;
+        this.subbed = subbed;
     }
 
     private Context context;
     private Action action;
+    private boolean subbed;
 
     @Override
     public void onSuccess(IMqttToken token)
@@ -38,10 +54,13 @@ public class Reactor implements IMqttActionListener {
         switch(action)
         {
             case CONNECT:
-                handleConnect();
+                handleConnect(token);
             break;
             case PUBLISH:
                 handlePublish();
+            break;
+            case SUBSCRIBE:
+                handleSubscribe();
             break;
             default:
                 Log.d("Reactor", "Unknown MQTT Action");
@@ -58,6 +77,9 @@ public class Reactor implements IMqttActionListener {
             case PUBLISH:
                 handlePublish(exception);
             break;
+            case SUBSCRIBE:
+                handleSubscribe(exception);
+            break;
             default:
                 Log.d("Reactor", "Unknown MQTT Action");
         }
@@ -66,8 +88,19 @@ public class Reactor implements IMqttActionListener {
     /**
      * An MQTT connection has been successfully established
      */
-    private void handleConnect() {
+    private void handleConnect(IMqttToken token) {
         Log.d("Reactor", "MQTT Connected");
+        // Subscribe to topic
+        if (!subbed) {
+            try {
+                this.action = Action.SUBSCRIBE; //We now monitor a diff. action with the same Reactor
+                token.getClient().subscribe(context.getResources().getString(R.string.mqtt_topic), 2,
+                                            context, this);
+            }
+            catch(MqttException e) {
+                Log.d("MQTTErr", e.getMessage());
+            }
+        }
     }
 
     /**
@@ -88,6 +121,14 @@ public class Reactor implements IMqttActionListener {
         }
     }
 
+    private void handleSubscribe() {
+        Log.d("Reactor", "Subscribed to a topic");
+    }
+
+    private void handleSubscribe(Throwable exception) {
+        Log.d("Reactor", exception.getMessage());
+    }
+
     /**
      * Payload has been published to broker
      */
@@ -101,14 +142,5 @@ public class Reactor implements IMqttActionListener {
     private void handlePublish(Throwable exception)
     {
         Log.d("Reactor", exception.getMessage());
-        try
-        {
-            // Show a toast notification
-            Notify.toast(context, "DEBUG: Publish Failed", 3000);
-        }
-        catch(Exception e)
-        {
-            Log.d("Mqtt.connect", e.getMessage());
-        }
     }
 }

@@ -3,6 +3,8 @@ import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,12 +16,13 @@ public class MainActivity extends AppCompatActivity {
         new Tasks();
 
         // Initialize MQTT Client
-        new MQTTClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "vcx");
+        new MQTTClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "bot");
 
         /* --------------------------------------------
          * Get List Fragments and add tasks to adapters
          */
         FragmentManager fm = getFragmentManager();
+        //
         // Column 1 (Requested)
         TaskListFragment col1 = (TaskListFragment) fm.findFragmentById(R.id.column1);
         col1.setListAdapter(new TaskListAdapter(this, Tasks.getRequested(), Task.Status.REQUESTED));
@@ -36,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         TaskListFragment col4 = (TaskListFragment) fm.findFragmentById(R.id.column4);
         col4.setListAdapter(new TaskListAdapter(this, Tasks.getDone(), Task.Status.DONE));
         col4.getListView().setOnItemLongClickListener(new LongItemClick());
+
     }
 
-    // TODO: Handle onDragEvent
+    public static ArrayList<TaskListAdapter> adapters;
 }

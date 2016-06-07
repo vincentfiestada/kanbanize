@@ -9,4 +9,5 @@
     <string name="move_button_label">Move to Development</string>
 
     <string name="broker_uri">tcp://m2m.eclipse.org:1883</string>
+    <string name="mqtt_topic">vcx.kanban</string>
 </resources>

@@ -24,6 +24,8 @@ class ItemDrag implements View.OnDragListener {
             // Get destination view and list
             ListView destView = (ListView) v.getParent();
             TaskListAdapter dest = (TaskListAdapter) destView.getAdapter();
+            // Preserve old status
+            Task.Status oldStatus = draggedTask.getStatus();
             // Remove Task from source and add to destination
             if (src.getList().remove(draggedTask)) {
                 draggedTask.setStatus(dest.getStatus());
@@ -31,7 +33,7 @@ class ItemDrag implements View.OnDragListener {
             }
 
             // Publish to MQTT broker
-            MQTTClient.publishStatusChange(draggedTask.getId(), draggedTask.getStatus());
+            MQTTClient.publishStatusChange(draggedTask.getId(), oldStatus, dest.getStatus());
 
             // Make sure data binding is updated
             src.notifyDataSetChanged();
