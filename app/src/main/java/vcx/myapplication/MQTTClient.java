@@ -72,10 +72,8 @@ public class MQTTClient {
                 payload.put("action", Actions.MOVE.toString());
                 payload.put("id", id);
                 payload.put("from", aid);
-                ArrayList<String> params = new ArrayList<>();
-                params.add(oldStatus.toString());
-                params.add(newStatus.toString());
-                payload.put("params", params);
+                payload.put("oldStatus", oldStatus.toString());
+                payload.put("newStatus", newStatus.toString());
                 client.publish(context.getResources().getString(R.string.mqtt_topic), new MqttMessage(payload.toString().getBytes()),
                         context.getApplicationContext(),
                         new Reactor(context.getApplicationContext(), Reactor.Action.PUBLISH));
@@ -96,11 +94,32 @@ public class MQTTClient {
                 payload.put("action", Actions.ADD.toString());
                 payload.put("id", task.getId());
                 payload.put("from", aid);
-                ArrayList<String> params = new ArrayList<>();
-                params.add(task.getName());
-                params.add(task.getStatus().toString());
-                params.add(Integer.toString(task.getUser().getId()));
-                payload.put("params", params);
+                payload.put("name", task.getName());
+                payload.put("status", task.getStatus());
+                payload.put("uid", task.getUser().getId());
+                client.publish(context.getResources().getString(R.string.mqtt_topic), new MqttMessage(payload.toString().getBytes()),
+                        context.getApplicationContext(),
+                        new Reactor(context.getApplicationContext(), Reactor.Action.PUBLISH));
+            }
+            catch(Exception e) {
+                Log.d("MQTTErr", e.getMessage());
+            }
+        }
+    }
+
+    public static void publishChanges(Task task)
+    {
+        if (client != null && client.isConnected())
+        {
+            try {
+                // Construct payload
+                JSONObject payload = new JSONObject();
+                payload.put("action", Actions.EDIT.toString());
+                payload.put("id", task.getId());
+                payload.put("from", aid);
+                payload.put("name", task.getName());
+                payload.put("status", task.getStatus());
+                payload.put("uid", task.getUser().getId());
                 client.publish(context.getResources().getString(R.string.mqtt_topic), new MqttMessage(payload.toString().getBytes()),
                         context.getApplicationContext(),
                         new Reactor(context.getApplicationContext(), Reactor.Action.PUBLISH));
@@ -121,9 +140,7 @@ public class MQTTClient {
                 payload.put("action", Actions.DELETE.toString());
                 payload.put("id", t.getId());
                 payload.put("from", aid);
-                ArrayList<String> params = new ArrayList<>();
-                params.add(t.getStatus().toString());
-                payload.put("params", params);
+                payload.put("status", t.getStatus().toString());
                 client.publish(context.getResources().getString(R.string.mqtt_topic), new MqttMessage(payload.toString().getBytes()),
                         context.getApplicationContext(),
                         new Reactor(context.getApplicationContext(), Reactor.Action.PUBLISH));

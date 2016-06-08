@@ -15,10 +15,26 @@ public class NewTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
 
+        EditText taskNameEdit = (EditText) findViewById(R.id.task_name_edit);
+        if (taskNameEdit != null) {
+            taskNameEdit.setText(getInitName());
+        }
+
         Spinner userSelector = (Spinner) findViewById(R.id.task_user_select);
         if (userSelector != null) {
             userSelector.setAdapter(new UserListAdapter(this, Users.getUsers()));
+            // >>>>>>> Assume that UserListAdapter lists users in the same order
+            // as the ids are assigned
+            userSelector.setSelection(getInitUser().getId() - 1);
         }
+    }
+
+    protected String getInitName() {
+        return "";
+    }
+
+    protected User getInitUser() {
+        return Users.get(0);
     }
 
     public void save(View v) {
@@ -38,8 +54,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 req.notifyDataSetChanged();
             }
 
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
+            finish();
         }
     }
 }

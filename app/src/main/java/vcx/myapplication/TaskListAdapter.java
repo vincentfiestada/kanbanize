@@ -1,7 +1,9 @@
 package vcx.myapplication;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +71,25 @@ public class TaskListAdapter extends BaseAdapter {
         taskView.userView.setText(tasks.get(position).getUser().getName());
         taskView.idView.setText(String.format(Locale.ENGLISH, "%1$d", tasks.get(position).getId()));
 
+        final View x = v;
+
+        (v.findViewById(R.id.move_task_button)).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View button) {
+                Log.d("d", "Clicked");
+
+                Task selectedTask = tasks.get(position);
+
+                DragArgs state = new DragArgs(selectedTask, x);
+
+                ClipData data = ClipData.newPlainText("taskName", selectedTask.getName());
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(x);
+                x.startDrag (data, shadow, state, 0);
+
+                return true;
+            }
+        });
+
         (v.findViewById(R.id.remove_task_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -77,6 +98,15 @@ public class TaskListAdapter extends BaseAdapter {
                     MQTTClient.publishRemoveTask(t);
                     notifyDataSetChanged();
                 }
+            }
+        });
+        (v.findViewById(R.id.edit_task_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                Intent i = new Intent(context.getApplicationContext(), EditTaskActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra(EditTaskActivity.ARG_TASK_ID, tasks.get(position).getId());
+                context.getApplicationContext().startActivity(i);
             }
         });
         v.setOnDragListener(new ItemDrag());

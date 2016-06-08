@@ -38,25 +38,27 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/move_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/remove_task_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/abc_control_padding_material"
-            android:text="@string/remove_task_button_label"
-            android:drawableLeft="@drawable/ic_remove_circle_outline_black_24dp" />
+        android:padding="@dimen/abc_control_padding_material"
+        android:text="Move" />
 
-        <Button
-            android:id="@+id/edit_task_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/abc_control_padding_material"
-            android:text="@string/edit_task_button_label"
-            android:drawableLeft="@drawable/ic_create_black_24dp" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/remove_task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/abc_control_padding_material"
+        android:text="@string/remove_task_button_label"
+        android:drawableLeft="@drawable/ic_remove_circle_outline_black_24dp" />
+
+    <Button
+        android:id="@+id/edit_task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/abc_control_padding_material"
+        android:text="@string/edit_task_button_label"
+        android:drawableLeft="@drawable/ic_create_black_24dp" />
 
 </LinearLayout>

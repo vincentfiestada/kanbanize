@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         new Tasks();
 
         // Initialize MQTT Client
-        new MQTTClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "bot");
+        new MQTTClient(getApplicationContext(), getResources().getString(R.string.broker_uri), "bot".concat(new Date().toString()));
 
         /* --------------------------------------------
          * Get List Fragments and add tasks to adapters
@@ -78,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     return null;
             }
-
         }
         else {
             return null;

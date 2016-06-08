@@ -90,6 +90,31 @@ public class Tasks {
         return tasks_done;
     }
 
+    public static Task getById(int id) {
+        ensureTasks();
+        for (int i = 0; i < tasks_req.size(); i++) {
+            if (tasks_req.get(i).getId() == id) {
+                return tasks_req.get(i);
+            }
+        }
+        for (int i = 0; i < tasks_dev.size(); i++) {
+            if (tasks_dev.get(i).getId() == id) {
+                return tasks_dev.get(i);
+            }
+        }
+        for (int i = 0; i < tasks_test.size(); i++) {
+            if (tasks_test.get(i).getId() == id) {
+                return tasks_test.get(i);
+            }
+        }
+        for (int i = 0; i < tasks_done.size(); i++) {
+            if (tasks_done.get(i).getId() == id) {
+                return tasks_done.get(i);
+            }
+        }
+        return null;
+    }
+
     public static List<Task> getListByStatus(String status) {
         switch (status) {
             case "DEVELOPMENT":

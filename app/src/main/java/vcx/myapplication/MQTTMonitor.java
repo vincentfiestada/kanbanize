@@ -43,10 +43,9 @@ public class MQTTMonitor implements MqttCallback {
             if (action.equals(Actions.MOVE.toString())) {
                 // Move task
                 Log.d("MQTT", "Moving a task");
-                JSONArray params = payload.getJSONArray("params");
 
-                TaskListAdapter src = MainActivity.getAdapterByStatus(params.getString(0));
-                TaskListAdapter dest = MainActivity.getAdapterByStatus(params.getString(1));
+                TaskListAdapter src = MainActivity.getAdapterByStatus(payload.getString("oldStatus"));
+                TaskListAdapter dest = MainActivity.getAdapterByStatus(payload.getString("newStatus"));
 
                 if (src != null && dest != null) {
                     // Remove Task from source and add to destination
@@ -54,7 +53,7 @@ public class MQTTMonitor implements MqttCallback {
                     if (t != null) {
                         // Make sure data binding is updated
                         src.notifyDataSetChanged();
-                        t.setStatus(params.getString(1));
+                        t.setStatus(Task.toStatus(payload.getString("newStatus")));
                         // Notify user
                         Notify.notify(this.context, "Task moved", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
                         dest.getList().add(t);
@@ -67,10 +66,9 @@ public class MQTTMonitor implements MqttCallback {
                 Log.d("MQTT", "Adding a Task");
 
                 try {
-                    JSONArray params = payload.getJSONArray("params");
-                    String taskName = params.getString(0);
-                    Task.Status status = Task.toStatus(params.getString(1));
-                    int userId = params.getInt(2);
+                    String taskName = payload.getString("name");
+                    Task.Status status = Task.toStatus(payload.getString("status"));
+                    int userId = payload.getInt("uid");
 
                     Task newTask = new Task(payload.getInt("id"), taskName, Users.getById(userId), status);
 
@@ -90,13 +88,43 @@ public class MQTTMonitor implements MqttCallback {
                     Log.d("MQTTErr", "Wrong Packet format");
                 }
             }
+            else if (action.equals(Actions.EDIT.toString())) {
+                // Add task
+                Log.d("MQTT", "Adding a Task");
+
+                try {
+                    String taskName = payload.getString("name");
+                    Task.Status status = Task.toStatus(payload.getString("status"));
+                    int userId = payload.getInt("uid");
+                    int taskId = payload.getInt("id");
+
+                    Task task = Tasks.getById(taskId);
+                    if (task == null) return;
+                    User user = Users.getById(userId);
+                    if (user == null) return;
+
+                    task.setName(taskName);
+                    task.setUser(user);
+
+                    TaskListAdapter dest = MainActivity.getAdapterByStatus(status);
+                    if (dest != null) {
+                        // Notify user
+                        Notify.notify(this.context, "Task edited",
+                                context.getString(R.string.notif_edited_text,
+                                        task.getId()));
+                        dest.notifyDataSetChanged();
+                    }
+                }
+                catch(JSONException e) {
+                    Log.d("MQTTErr", "Wrong Packet format");
+                }
+            }
             else if (action.equals(Actions.DELETE.toString())) {
                 // Add task
                 Log.d("MQTT", "Deleting a Task");
 
                 try {
-                    JSONArray params = payload.getJSONArray("params");
-                    Task.Status status = Task.toStatus(params.getString(0));
+                    Task.Status status = Task.toStatus(payload.getString("status"));
 
                     TaskListAdapter target = MainActivity.getAdapterByStatus(status);
                     if (target != null) {
@@ -109,7 +137,7 @@ public class MQTTMonitor implements MqttCallback {
                     }
                 }
                 catch(JSONException e) {
-                    Log.d("MQTTErr", "Wrong Packet format");
+                    Log.d("MQTTErr", e.getMessage());
                 }
             }
         }
