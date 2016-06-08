@@ -7,12 +7,11 @@ import android.util.Log;
 
 /**
  * Handles an item being dragged (see TaskListFragment and TaskListAdapter)
+ * Should be set as OnDragListener of a Task Fragment
  */
 class ItemDrag implements View.OnDragListener {
     @Override
     public boolean onDrag (View v, DragEvent event) {
-
-        Log.d("Drag", Integer.toString(event.getAction()));
 
         if (event.getAction() == DragEvent.ACTION_DROP) {
             Log.d("DragListener", "Dropping");
@@ -22,7 +21,7 @@ class ItemDrag implements View.OnDragListener {
             ListView sourceView = (ListView) passed.sourceView.getParent();
             TaskListAdapter src = (TaskListAdapter) sourceView.getAdapter();
             // Get destination view and list
-            ListView destView = (ListView) v.getParent();
+            ListView destView = getDestView(v);
             TaskListAdapter dest = (TaskListAdapter) destView.getAdapter();
             // Preserve old status
             Task.Status oldStatus = draggedTask.getStatus();
@@ -44,5 +43,9 @@ class ItemDrag implements View.OnDragListener {
         }
 
         return true;
+    }
+
+    protected ListView getDestView(View v) {
+        return (ListView) v.getParent();
     }
 }

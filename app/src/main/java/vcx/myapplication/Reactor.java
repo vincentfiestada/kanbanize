@@ -123,10 +123,12 @@ public class Reactor implements IMqttActionListener {
 
     private void handleSubscribe() {
         Log.d("Reactor", "Subscribed to a topic");
+        subbed = true;
     }
 
     private void handleSubscribe(Throwable exception) {
         Log.d("Reactor", exception.getMessage());
+        subbed = false;
     }
 
     /**

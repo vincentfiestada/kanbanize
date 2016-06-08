@@ -51,7 +51,7 @@ public class MQTTClient {
         if (client != null && !client.isConnected()) {
             try {
                 client.connect(new MqttConnectOptions(),
-                    new Reactor(context.getApplicationContext(), Reactor.Action.CONNECT));
+                    new Reactor(context.getApplicationContext(), Reactor.Action.CONNECT, false));
             }
             catch(Exception e) {
                 Log.d("MQTTErr", e.getMessage());

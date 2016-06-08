@@ -33,21 +33,25 @@ public class MainActivity extends AppCompatActivity {
         adapters.add(REQ_INDEX, new TaskListAdapter(this, Tasks.getRequested(), Task.Status.REQUESTED));
         col1.setListAdapter(adapters.get(REQ_INDEX));
         col1.getListView().setOnItemLongClickListener(new LongItemClick());
+        col1.getListView().setOnDragListener(new ItemDragToEmpty());
         // Column 2 (Development)
         TaskListFragment col2 = (TaskListFragment) fm.findFragmentById(R.id.column2);
         adapters.add(DEV_INDEX, new TaskListAdapter(this, Tasks.getDevelopment(), Task.Status.DEVELOPMENT));
         col2.setListAdapter(adapters.get(DEV_INDEX));
         col2.getListView().setOnItemLongClickListener(new LongItemClick());
+        col2.getListView().setOnDragListener(new ItemDragToEmpty());
         // Column 3 (Testing)
         TaskListFragment col3 = (TaskListFragment) fm.findFragmentById(R.id.column3);
         adapters.add(TEST_INDEX, new TaskListAdapter(this, Tasks.getTesting(), Task.Status.TESTING));
         col3.setListAdapter(adapters.get(TEST_INDEX));
         col3.getListView().setOnItemLongClickListener(new LongItemClick());
+        col3.getListView().setOnDragListener(new ItemDragToEmpty());
         // Column 4 (Done)
         TaskListFragment col4 = (TaskListFragment) fm.findFragmentById(R.id.column4);
         adapters.add(DONE_INDEX, new TaskListAdapter(this, Tasks.getDone(), Task.Status.DONE));
         col4.setListAdapter(adapters.get(DONE_INDEX));
         col4.getListView().setOnItemLongClickListener(new LongItemClick());
+        col4.getListView().setOnDragListener(new ItemDragToEmpty());
 
     }
 

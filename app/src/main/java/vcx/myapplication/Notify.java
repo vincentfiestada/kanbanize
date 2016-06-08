@@ -20,7 +20,7 @@ public class Notify {
      * @param title Title of the notification
      * @param text The text the toast should display
      */
-    static void notif(Context context, String title, String text) {
+    static void notify(Context context, String title, String text) {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)

@@ -35,13 +35,12 @@ public class MQTTMonitor implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         JSONObject payload = new JSONObject(message.toString());
-        Log.d("rcv", payload.toString());
         // Make sure it isn't from us
+        Log.d("rcv", payload.toString());
         if (!payload.isNull("from") && !payload.get("from").equals(aid)) {
             // React to notification
             Log.d("rcv", "Opening toast");
-            Log.d("rcv", payload.getString("action"));
-            if (payload.getString("action").compareTo("MOVE") == 0) {
+            if (payload.getString("action").equals("MOVE")) {
                 // Move task
                 Log.d("go", "Moving");
                 JSONArray params = payload.getJSONArray("params");
@@ -57,7 +56,7 @@ public class MQTTMonitor implements MqttCallback {
                         src.notifyDataSetChanged();
                         t.setStatus(params.getString(1));
                         // Notify user
-                        Notify.notif(this.context, "Message", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
+                        Notify.notify(this.context, "Message", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
                         dest.getList().add(t);
                         dest.notifyDataSetChanged();
                     }

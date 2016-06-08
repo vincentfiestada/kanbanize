@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:layout_width="140dp"
         android:layout_height="match_parent"
-        android:background="#bd0000"
+        android:background="@android:color/holo_red_dark"
         android:layout_gravity="center"
         android:layout_weight="0.25">
 
@@ -26,20 +26,20 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/column1_label"
             style="@style/ColumnLabelStyle"
-            android:layout_weight="0.05" />
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
         <fragment
             android:id="@+id/column1"
             android:name="vcx.myapplication.TaskListFragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:layout="@android:layout/simple_list_item_1"
-            android:layout_weight="1" />
+            tools:layout="@android:layout/simple_list_item_1" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="140dp"
         android:layout_height="match_parent"
-        android:background="#f1a100"
+        android:background="@android:color/holo_orange_light"
         android:layout_weight="0.25">
         <TextView
             android:layout_width="match_parent"
@@ -47,20 +47,20 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/column2_label"
             style="@style/ColumnLabelStyle"
-            android:layout_weight="0.05" />
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
         <fragment
             android:id="@+id/column2"
             android:name="vcx.myapplication.TaskListFragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:layout="@android:layout/simple_list_item_1"
-            android:layout_weight="1" />
+            tools:layout="@android:layout/simple_list_item_1" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="140dp"
         android:layout_height="match_parent"
-        android:background="#00b2e3"
+        android:background="@android:color/holo_blue_dark"
         android:layout_weight="0.25">
         <TextView
             android:layout_width="match_parent"
@@ -68,20 +68,20 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/column3_label"
             style="@style/ColumnLabelStyle"
-            android:layout_weight="0.05" />
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
         <fragment
             android:id="@+id/column3"
             android:name="vcx.myapplication.TaskListFragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:layout="@android:layout/simple_list_item_1"
-            android:layout_weight="1" />
+            tools:layout="@android:layout/simple_list_item_1" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="140dp"
         android:layout_height="match_parent"
-        android:background="#009451"
+        android:background="@android:color/holo_green_dark"
         android:layout_weight="0.25">
         <TextView
             android:layout_width="match_parent"
@@ -89,13 +89,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/column4_label"
             style="@style/ColumnLabelStyle"
-            android:layout_weight="0.05" />
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
         <fragment
             android:id="@+id/column4"
             android:name="vcx.myapplication.TaskListFragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:layout="@android:layout/simple_list_item_1"
-            android:layout_weight="1" />
+            tools:layout="@android:layout/simple_list_item_1" />
     </LinearLayout>
 </LinearLayout>

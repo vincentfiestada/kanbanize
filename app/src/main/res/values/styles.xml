@@ -8,7 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ColumnLabelStyle" parent="TextAppearance.AppCompat.Large.Inverse">
+    <style name="ColumnLabelStyle" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">#fff</item>
         <item name="android:gravity">center</item>
     </style>
 
