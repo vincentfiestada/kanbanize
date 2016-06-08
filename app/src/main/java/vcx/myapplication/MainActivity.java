@@ -1,7 +1,14 @@
 package vcx.myapplication;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -57,16 +64,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<TaskListAdapter> adapters;
 
-    public static TaskListAdapter getAdapterByStatus(String status) {
+    public static TaskListAdapter getAdapterByStatus(Task.Status status) {
         if (adapters != null) {
             switch(status) {
-                case "DEVELOPMENT":
+                case DEVELOPMENT:
                     return adapters.get(DEV_INDEX);
-                case "TESTING":
+                case TESTING:
                     return adapters.get(TEST_INDEX);
-                case "DONE":
+                case DONE:
                     return adapters.get(DONE_INDEX);
-                case "REQUESTED":
+                case REQUESTED:
                     return adapters.get(REQ_INDEX);
                 default:
                     return null;
@@ -76,5 +83,33 @@ public class MainActivity extends AppCompatActivity {
         else {
             return null;
         }
+    }
+
+    public static TaskListAdapter getAdapterByStatus(String status) {
+        return getAdapterByStatus(Task.toStatus(status));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.board_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.new_task_button:
+                newTask();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void newTask() {
+        Intent i = new Intent(this, NewTaskActivity.class);
+        startActivity(i);
     }
 }

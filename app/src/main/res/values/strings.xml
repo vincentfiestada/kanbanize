@@ -1,11 +1,21 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Greendale Community College Kanban</string>
     <string name="column1_label">Requested</string>
     <string name="column2_label">Development</string>
     <string name="column3_label">Testing</string>
     <string name="column4_label">Done</string>
 
-    <string name="notif_moved_text">The task "%1$s" has been moved to %2$s</string>
+    <string name="notif_moved_text">The task \"%1$s\" has been moved to %2$s</string>
+    <string name="notif_added_text">New task \"%1$s\" assigned to %2$s</string>
+    <string name="notif_removed_text">The task \"%1$s\" has been deleted</string>
+    <string name="user_id_label">(User ID %1$d)</string>
+    <string name="save_new_task_button_label">Save New Task</string>
+    <string name="remove_task_button_label">Remove Task</string>
+    <string name="edit_task_button_label">Edit</string>
+
+    <string name="menu_item_new_task">New Task</string>
+
+    <string name="task_name_hint">Task Name</string>
 
     <string name="broker_uri">tcp://m2m.eclipse.org:1883</string>
     <string name="mqtt_topic">vcx.kanban</string>

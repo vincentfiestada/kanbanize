@@ -20,11 +20,17 @@ public class Tasks {
         }
         // TODO: initiate from resource
         if (!tasksLoaded) {
-            User jeff = new User(1, "Jeff Winger");
-            User abed = new User(2, "Abed Nadir");
-            User annie = new User(3, "Annie Edison");
-            User troy = new User(4, "Troy Barnes");
-            User britta = new User(4, "Britta Perry");
+
+            new Users();
+            // Get users
+            User jeff = Users.get(0);
+            User abed = Users.get(1);
+            User annie = Users.get(2);
+            User troy = Users.get(3);
+            User britta = Users.get(4);
+            User shirley = Users.get(5);
+            User dean = Users.get(6);
+
             add(new Task("Wake up", jeff));
             add(new Task("Take a bath", jeff));
             add(new Task("Watch Die Hard", abed, Task.Status.DEVELOPMENT));
@@ -35,14 +41,22 @@ public class Tasks {
             add(new Task("Watch Inspector SpaceTime", abed, Task.Status.DONE));
             add(new Task("Watch Inspector SpaceTime", troy, Task.Status.DEVELOPMENT));
             add(new Task("Come up with quippy remarks", jeff, Task.Status.TESTING));
+            add(new Task("Buy Dalmatian poster", dean));
+            add(new Task("Handle latest budget cuts", dean));
+            add(new Task("Issue diplomas to 456 students", dean));
+            add(new Task("Make pastries", shirley, Task.Status.DEVELOPMENT));
+            add(new Task("Start a sandwich shop", shirley, Task.Status.DONE));
+            add(new Task("Ruin things", britta, Task.Status.DONE));
+            add(new Task("Celebrate Star Wars Day", abed, Task.Status.DEVELOPMENT));
+            add(new Task("Repair the Dreamatorium", troy, Task.Status.TESTING));
             tasksLoaded = true; // Don't reload next time
         }
     }
 
-    private static ArrayList<Task> tasks_req;
-    private static ArrayList<Task> tasks_dev;
-    private static ArrayList<Task> tasks_test;
-    private static ArrayList<Task> tasks_done;
+    public static ArrayList<Task> tasks_req;
+    public static ArrayList<Task> tasks_dev;
+    public static ArrayList<Task> tasks_test;
+    public static ArrayList<Task> tasks_done;
     private static boolean tasksLoaded = false;
 
     /**
@@ -92,18 +106,25 @@ public class Tasks {
     public static boolean add(Task task)
     {
         ensureTasks();
+        boolean result = false;
         switch(task.getStatus()) {
             case REQUESTED:
-                return tasks_req.add(task);
+                result = tasks_req.add(task);
+            break;
             case DEVELOPMENT:
-                return tasks_dev.add(task);
+                result = tasks_dev.add(task);
+            break;
             case TESTING:
-                return tasks_test.add(task);
+                result = tasks_test.add(task);
+            break;
             case DONE:
-                return tasks_done.add(task);
-            default:
-                return false;
+                result = tasks_done.add(task);
+            break;
         }
+        if (result) { // Notify about new task
+            MQTTClient.publishNewTask(task);
+        }
+        return result;
     }
 
 }

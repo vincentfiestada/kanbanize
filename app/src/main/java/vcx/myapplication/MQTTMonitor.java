@@ -1,7 +1,6 @@
 package vcx.myapplication;
 
 import android.content.Context;
-import android.util.JsonReader;
 import android.util.Log;
 import android.provider.Settings.Secure;
 
@@ -9,9 +8,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import vcx.myapplication.MQTTClient.Actions;
 
 /**
  * Implements the MqttCallback and reacts to MqttAndroidClient events
@@ -39,10 +39,10 @@ public class MQTTMonitor implements MqttCallback {
         Log.d("rcv", payload.toString());
         if (!payload.isNull("from") && !payload.get("from").equals(aid)) {
             // React to notification
-            Log.d("rcv", "Opening toast");
-            if (payload.getString("action").equals("MOVE")) {
+            String action = payload.getString("action");
+            if (action.equals(Actions.MOVE.toString())) {
                 // Move task
-                Log.d("go", "Moving");
+                Log.d("MQTT", "Moving a task");
                 JSONArray params = payload.getJSONArray("params");
 
                 TaskListAdapter src = MainActivity.getAdapterByStatus(params.getString(0));
@@ -56,10 +56,60 @@ public class MQTTMonitor implements MqttCallback {
                         src.notifyDataSetChanged();
                         t.setStatus(params.getString(1));
                         // Notify user
-                        Notify.notify(this.context, "Message", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
+                        Notify.notify(this.context, "Task moved", context.getString(R.string.notif_moved_text, t.getName(), t.getStatus()));
                         dest.getList().add(t);
                         dest.notifyDataSetChanged();
                     }
+                }
+            }
+            else if (action.equals(Actions.ADD.toString())) {
+                // Add task
+                Log.d("MQTT", "Adding a Task");
+
+                try {
+                    JSONArray params = payload.getJSONArray("params");
+                    String taskName = params.getString(0);
+                    Task.Status status = Task.toStatus(params.getString(1));
+                    int userId = params.getInt(2);
+
+                    Task newTask = new Task(payload.getInt("id"), taskName, Users.getById(userId), status);
+
+                    TaskListAdapter dest = MainActivity.getAdapterByStatus(status);
+                    if (dest != null) {
+                        if (dest.getList().add(newTask)) {
+                            // Notify user
+                            Notify.notify(this.context, "Task added",
+                                    context.getString(R.string.notif_added_text,
+                                                        newTask.getName(),
+                                                        newTask.getUser().getName()));
+                            dest.notifyDataSetChanged();
+                        }
+                    }
+                }
+                catch(JSONException e) {
+                    Log.d("MQTTErr", "Wrong Packet format");
+                }
+            }
+            else if (action.equals(Actions.DELETE.toString())) {
+                // Add task
+                Log.d("MQTT", "Deleting a Task");
+
+                try {
+                    JSONArray params = payload.getJSONArray("params");
+                    Task.Status status = Task.toStatus(params.getString(0));
+
+                    TaskListAdapter target = MainActivity.getAdapterByStatus(status);
+                    if (target != null) {
+                        Task t = target.removeById(payload.getInt("id"));
+                        if (t != null) {
+                            // Notify user
+                            Notify.notify(this.context, "Task removed", context.getString(R.string.notif_removed_text, t.getName()));
+                            target.notifyDataSetChanged();
+                        }
+                    }
+                }
+                catch(JSONException e) {
+                    Log.d("MQTTErr", "Wrong Packet format");
                 }
             }
         }

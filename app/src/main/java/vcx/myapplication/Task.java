@@ -39,6 +39,7 @@ public class Task {
         this.name = name;
         this.assignedUser = user;
         this.status = Status.REQUESTED;
+        nextId = id + 1;
     }
 
     public Task(int id, String name, User user, Status status)
@@ -47,6 +48,7 @@ public class Task {
         this.name = name;
         this.assignedUser = user;
         this.status = status;
+        nextId = id + 1;
     }
 
     private static int nextId = 0;
@@ -105,6 +107,19 @@ public class Task {
             case "DONE":
                 this.status = Status.DONE;
             break;
+        }
+    }
+
+    public static Status toStatus(String status) {
+        switch(status) {
+            case "DEVELOPMENT":
+                return Status.DEVELOPMENT;
+            case "TESTING":
+                return Status.TESTING;
+            case "DONE":
+                return Status.DONE;
+            default:
+                return Status.REQUESTED;
         }
     }
 

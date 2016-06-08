@@ -2,10 +2,12 @@ package vcx.myapplication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,7 +50,7 @@ public class TaskListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView (int position, View convertView, ViewGroup parent) {
+    public View getView (final int position, View convertView, ViewGroup parent) {
         View v = convertView;
 
         if (v == null) {
@@ -67,6 +69,16 @@ public class TaskListAdapter extends BaseAdapter {
         taskView.userView.setText(tasks.get(position).getUser().getName());
         taskView.idView.setText(String.format(Locale.ENGLISH, "%1$d", tasks.get(position).getId()));
 
+        (v.findViewById(R.id.remove_task_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                Task t = tasks.remove(position);
+                if (t != null) {
+                    MQTTClient.publishRemoveTask(t);
+                    notifyDataSetChanged();
+                }
+            }
+        });
         v.setOnDragListener(new ItemDrag());
 
         return v;
